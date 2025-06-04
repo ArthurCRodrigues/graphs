@@ -14,8 +14,7 @@ class Graph:
         if dest not in self.adj_list:
             self.add_vertex(dest)
         self.adj_list[src].append(dest)
-        # For undirected graph, also add the reverse edge:
-        # self.adj_list[dest].append(src)
+        self.adj_list[dest].append(src)
 
     def display(self):
         for vertex in self.adj_list:
@@ -44,15 +43,58 @@ class Graph:
                     if neighbor not in visited:
                         container.append(neighbor)
 
-          
+
+    def has_path_bfs(self,start,end):
+        queue = [ start ]
+        visited = set()
+        while queue:
+            node = queue.pop(0)
+            print(node)
+            if node == end:
+                return True
+            if node not in visited:
+                visited.add(node)
+                #print("Neighbors: ", self.adj_list[node])
+                for neighbour in self.adj_list[node]:
+                    if neighbour not in visited:
+                        queue.append(neighbour)
+        return False
+    
+    def shortest_path_bfs(self,start,end):
+        queue = [[start]] #each element of the queue is a list that represents a path (the order of elements in that list is the traversal order of the path)
+        visited = set()
+        while queue:
+            current_path = queue.pop(0)
+            current_node = current_path[-1] #last node represents the end of the current path //aka the next node to check for neighbors
+            print(current_node)
+            if current_node == end:
+                return current_path
+            if current_node not in visited:
+                visited.add(current_node)
+                for neighbor in self.adj_list[current_node]:
+                    if neighbor not in visited:
+                        new_path = list(current_path)
+                        new_path.append(neighbor)
+                        queue.append(new_path)
+        return None
+class directedGraph(Graph):
+    def add_edge(self, src, dest):
+        if src not in self.adj_list:
+            self.add_vertex(src)
+        if dest not in self.adj_list:
+            self.add_vertex(dest)
+        self.adj_list[src].append(dest)
 
 # Example usage:
 if __name__ == "__main__":
-    g = Graph()
-    g.add_edge('A', 'B')
-    g.add_edge('A', 'C')
-    g.add_edge('B', 'D')
-    g.add_edge('C', 'D')
-    g.traverse('A', method='DFS')
-    print()  # New line after traversal
-    g.traverse('A', method='BFS')
+    g = directedGraph()
+    g.add_edge('A','B')
+    g.add_edge('C','A')
+    g.add_edge('B','D')
+    g.add_edge('D','B')
+    g.add_edge('D','E')
+    g.add_edge('A','E')
+    g.add_edge('C','E')
+    g.display()
+    print(g.has_path_bfs('A','E'))
+    print(g.shortest_path_bfs('A','E'))

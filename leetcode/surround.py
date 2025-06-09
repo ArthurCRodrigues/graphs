@@ -19,7 +19,6 @@ class Solution(object):
             elem = queue[index]
             index += 1
             r,c = elem[0],elem[1]
-            #print_sigle_element(board,elem)
             if (r == 0 or c == 0 or r == (rows-1) or c == (cols-1)):
                 visited[r][c] = True
                 error = True
@@ -29,7 +28,6 @@ class Solution(object):
                 for dr,dc in directions:
                     nr,nc = r+dr,c+dc
                     if board[nr][nc] == "O":
-                        #print("\tChecked for ")
                         queue.append((nr,nc))
         if error == True: 
             return False

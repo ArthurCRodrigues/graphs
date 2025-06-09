@@ -1,4 +1,4 @@
-from collections import deque
+
 class Solution(object):
     
     def to_adj(self,pr):
@@ -16,19 +16,19 @@ class Solution(object):
         return adj
     
     def has_path(self,start,table):
-        queue = deque()
+        stack = []
         visited = set()
-        queue.append(start)
+        stack.append(start)
         first = True
-        while queue:
-            print(queue)
-            elem = queue.popleft()
+        while stack:
+            print(stack)
+            elem = stack.pop()
             if elem not in visited:
                 visited.add(elem)
                 print(f"Current element -> {elem}")
                 for neighbor in table[elem]:
                     print(f"{neighbor} is neighbor of {elem}")
-                    queue.append(neighbor)
+                    stack.append(neighbor)
             elif elem == start and not first:
                 print(f"{elem} == {start}...")
                 return False
@@ -43,21 +43,25 @@ class Solution(object):
             if req[::-1] in prerequisites:
                 return False
         adj_list = self.to_adj(prerequisites)
-        return self.has_path(prerequisites[0][1],self.to_adj(prerequisites))
+        for node in adj_list.keys():
+            if not self.has_path(node,adj_list):
+                return False
+        return True
 
 if __name__ == '__main__':
     numCourses = 3
     prerequisites_list = [
+                        [[1,0]],
                         [[1,0],[2,6],[1,7],[6,4],[7,0],[0,5]],
                         [[1,0],[0,2],[2,1]],
                         [[1,0],[2,6],[1,7],[6,4],[7,0],[0,5]],
                         [[1,0],[2,1],[3,2],[1,3]]
                           ]
     
-
     sol = Solution()
     for prerequisites in prerequisites_list:
-        print(sol.to_adj(prerequisites))
+        adj_list = sol.to_adj(prerequisites)
+        print(adj_list)
         print("\t",sol.canFinish(numCourses,prerequisites))
         print("\n"*5)
     
